@@ -4,12 +4,5 @@
     "rootDir": ".",
     "outDir": "build"
   },
-  "include": [
-    "src/*.ts",
-    "src/**/*.ts",
-    "test/*.ts",
-    "test/**/*.ts",
-    "__tests__/*.ts",
-    "__tests__/**/*.ts"
-  ]
+  "include": ["src/*.ts", "src/**/*.ts"]
 }

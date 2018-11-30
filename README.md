@@ -6,3 +6,7 @@ goal is to bring together:
 • `ipython-paths`
 • `kernelspecs`
 • `spawnteract`
+
+```js
+import { startKernel } from "@rgbkrk/jupyter-native";
+```

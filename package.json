@@ -11,6 +11,7 @@
   "keywords": [],
   "scripts": {
     "test": "jest",
+    "tinker": "ts-node scripts/tinker.ts",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.11",
+    "expect": "^23.6.0",
     "gts": "^0.9.0",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.5",

@@ -1,0 +1,362 @@
+{
+  "name": "wap_unpartitioned_integration_20181128_1543443429.ipynb",
+  "path": "nflx-data-core-integration-tests/wap_unpartitioned_integration_20181128_1543443429.ipynb",
+  "type": "notebook",
+  "writable": true,
+  "created": null,
+  "last_modified": "2018-11-28T22:34:21.000Z",
+  "mimetype": null,
+  "content": {
+    "cells": [
+      {
+        "cell_type": "code",
+        "execution_count": 1,
+        "metadata": {
+          "papermill": {
+            "duration": 2.458601,
+            "end_time": "2018-11-28T22:33:44.511738",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:42.053137",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [
+          {
+            "name": "stdout",
+            "output_type": "stream",
+            "text": [
+              "Name: nflx-data-core\r\n",
+              "Version: 0.23.4\r\n",
+              "Summary: Useful collection of DEI Core tools & recipes for DEI engineers working with Netflix Big Data Platform\r\n",
+              "Home-page: https://stash.corp.netflix.com/projects/DEA/repos/dea-core\r\n",
+              "Author: Michelle Ufford\r\n",
+              "Author-email: mufford@netflix.com\r\n",
+              "License: UNKNOWN\r\n",
+              "Location: /usr/local/lib/python2.7/dist-packages\r\n",
+              "Requires: coverage, arrow, nflx-kragle, nflx-kragle-quinto, pyyaml\r\n",
+              "Required-by: \r\n"
+            ]
+          }
+        ],
+        "source": ["!pip show nflx-data-core"]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 2,
+        "metadata": {
+          "papermill": {
+            "duration": 0.17905,
+            "end_time": "2018-11-28T22:33:44.842788",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:44.663738",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [],
+        "source": [
+          "def assert_equals(expected, actual):\n",
+          "    assert expected == actual, \"expected: {}, actual: {}\".format(expected, actual)"
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 3,
+        "metadata": {
+          "papermill": {
+            "duration": 2.226323,
+            "end_time": "2018-11-28T22:33:47.246504",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:45.020181",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "INFO 2018-11-28 22:33:45,996 driver.py(120) Generating grammar tables from /usr/lib/python2.7/lib2to3/Grammar.txt\n"
+            ]
+          },
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "INFO 2018-11-28 22:33:46,017 driver.py(120) Generating grammar tables from /usr/lib/python2.7/lib2to3/PatternGrammar.txt\n"
+            ]
+          }
+        ],
+        "source": [
+          "import time\n",
+          "import pandas as pd\n",
+          "import kragle as kg\n",
+          "from nflx_data_core.wap import Wap"
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 4,
+        "metadata": {
+          "papermill": {
+            "duration": 0.163068,
+            "end_time": "2018-11-28T22:33:47.562065",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:47.398997",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [],
+        "source": [
+          "audit_table_suffix = int(time.time())\n",
+          "prod_table_path = \"prodhive/bdp_test/wap_unpartitioned_test\""
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 5,
+        "metadata": {
+          "papermill": {
+            "duration": 4.062324,
+            "end_time": "2018-11-28T22:33:51.786655",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:47.724331",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [
+          {
+            "data": {
+              "text/plain": [
+                "Wap(prod_table=prodhive/bdp_test/wap_unpartitioned_test, audit_table=prodhive/audit/bdp_test__wap_unpartitioned_test__audit__1543444427)"
+              ]
+            },
+            "execution_count": 5,
+            "metadata": {},
+            "output_type": "execute_result"
+          }
+        ],
+        "source": [
+          "my_wap = Wap.from_path(prod_table_path)\n",
+          "my_wap.get_or_create_audit_table(audit_table_suffix)"
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 6,
+        "metadata": {
+          "papermill": {
+            "duration": 0.167069,
+            "end_time": "2018-11-28T22:33:52.108368",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:51.941299",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [],
+        "source": [
+          "# check table paths\n",
+          "assert_equals(\n",
+          "    my_wap.audit_table.path,\n",
+          "    'prodhive/audit/bdp_test__wap_unpartitioned_test__audit__{}'.format(audit_table_suffix)\n",
+          ")"
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 7,
+        "metadata": {
+          "papermill": {
+            "duration": 0.162864,
+            "end_time": "2018-11-28T22:33:52.434307",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:52.271443",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [],
+        "source": [
+          "# check table location (uris)\n",
+          "prod_table_uri = my_wap.prod_table.describe().uri\n",
+          "audit_table_uri = my_wap.audit_table.describe().uri\n",
+          "\n",
+          "assert_equals(\n",
+          "    prod_table_uri.split('batchid=')[0],\n",
+          "    audit_table_uri.split('batchid=')[0]\n",
+          ")\n"
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 8,
+        "metadata": {
+          "papermill": {
+            "duration": 3.470469,
+            "end_time": "2018-11-28T22:33:56.056490",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:52.586021",
+            "status": "completed"
+          },
+          "scrolled": true,
+          "tags": []
+        },
+        "outputs": [
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "INFO 2018-11-28 22:33:54,733 utils.py(496) wrote 1 rows to s3n://netflix-dataoven-prod-users/hive/warehouse/bdp_test.db/wap_unpartitioned_test/batchid=1543444434/target.gz\n"
+            ]
+          },
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "INFO 2018-11-28 22:33:55,107 utils.py(499) updating prodhive/audit/bdp_test__wap_unpartitioned_test__audit__1543444427 to s3n://netflix-dataoven-prod-users/hive/warehouse/bdp_test.db/wap_unpartitioned_test/batchid=1543444434\n"
+            ]
+          },
+          {
+            "data": {
+              "text/plain": [
+                "<kragle.transport.model.TransportInfo at 0x7f38b01b1f10>"
+              ]
+            },
+            "execution_count": 8,
+            "metadata": {},
+            "output_type": "execute_result"
+          }
+        ],
+        "source": [
+          "df = pd.DataFrame(data={'foo': ['bar']})\n",
+          "kg.transport.Transporter().source(df).target('metacat://{}'.format(my_wap.audit_table.path)).execute()"
+        ]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 9,
+        "metadata": {
+          "papermill": {
+            "duration": 0.888422,
+            "end_time": "2018-11-28T22:33:57.124646",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:56.236224",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "WARNING 2018-11-28 22:33:56,835 quintosuite.py(44) Could not find any evaluations matching your tags. Check your table and tags.\n"
+            ]
+          }
+        ],
+        "source": ["my_wap.audit()"]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 10,
+        "metadata": {
+          "papermill": {
+            "duration": 20.696368,
+            "end_time": "2018-11-28T22:34:17.991100",
+            "exception": false,
+            "start_time": "2018-11-28T22:33:57.294732",
+            "status": "completed"
+          },
+          "scrolled": true,
+          "tags": []
+        },
+        "outputs": [
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "INFO 2018-11-28 22:34:16,237 wap.py(307) Publishing non-partitioned table. Updating production table from s3n://netflix-dataoven-prod-users/hive/warehouse/bdp_test.db/wap_unpartitioned_test/batchid=1539904125 to s3n://netflix-dataoven-prod-users/hive/warehouse/bdp_test.db/wap_unpartitioned_test/batchid=1543444434.\n"
+            ]
+          },
+          {
+            "name": "stderr",
+            "output_type": "stream",
+            "text": [
+              "ERROR 2018-11-28 22:34:16,717 wap.py(360) Unable to publish lineage!\n",
+              "Traceback (most recent call last):\n",
+              "  File \"/usr/local/lib/python2.7/dist-packages/nflx_data_core/wap.py\", line 355, in publish_lineage\n",
+              "    running_job = WapApi.get_running_job(genie_job_id)\n",
+              "  File \"/usr/local/lib/python2.7/dist-packages/nflx_data_core/api/wap_api.py\", line 168, in get_running_job\n",
+              "    return kg.genie.reattach_job(genie_job_id)\n",
+              "  File \"/usr/local/lib/python2.7/dist-packages/kragle/djinn/geniethree/utils.py\", line 171, in reattach_job\n",
+              "    identifier = extract_from_genie(identifier)\n",
+              "  File \"/usr/local/lib/python2.7/dist-packages/kragle/djinn/geniethree/utils.py\", line 133, in extract_from_genie\n",
+              "    m = re.search('jobs?.*id=([^&]+)', identifier)\n",
+              "  File \"/usr/lib/python2.7/re.py\", line 146, in search\n",
+              "    return _compile(pattern, flags).search(string)\n",
+              "TypeError: expected string or buffer\n"
+            ]
+          }
+        ],
+        "source": ["my_wap.publish()"]
+      },
+      {
+        "cell_type": "code",
+        "execution_count": 11,
+        "metadata": {
+          "papermill": {
+            "duration": 0.187186,
+            "end_time": "2018-11-28T22:34:18.622174",
+            "exception": false,
+            "start_time": "2018-11-28T22:34:18.434988",
+            "status": "completed"
+          },
+          "tags": []
+        },
+        "outputs": [],
+        "source": [
+          "# after publish, table locations should match\n",
+          "prod_table_uri = my_wap.prod_table.describe().uri\n",
+          "audit_table_uri = my_wap.audit_table.describe().uri\n",
+          "\n",
+          "assert_equals(prod_table_uri, audit_table_uri)"
+        ]
+      }
+    ],
+    "metadata": {
+      "kernelspec": {
+        "display_name": "Python 2",
+        "language": "python",
+        "name": "python2"
+      },
+      "language_info": {
+        "codemirror_mode": { "name": "ipython", "version": 2 },
+        "file_extension": ".py",
+        "mimetype": "text/x-python",
+        "name": "python",
+        "nbconvert_exporter": "python",
+        "pygments_lexer": "ipython2",
+        "version": "2.7.12"
+      },
+      "papermill": {
+        "duration": 41.463348,
+        "end_time": "2018-11-28T22:34:20.113739",
+        "environment_variables": {},
+        "exception": null,
+        "input_path": "/source/tests/integration/wap_unpartitioned_integration.ipynb",
+        "output_path": "s3.commuter://nflx-data-core-integration-tests/wap_unpartitioned_integration_20181128_1543443429.ipynb",
+        "parameters": {},
+        "start_time": "2018-11-28T22:33:38.650391",
+        "version": "0.16.1"
+      }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 1
+  },
+  "format": null
+}

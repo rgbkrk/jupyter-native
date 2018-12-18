@@ -22,23 +22,25 @@
   },
   "jest": {
     "moduleFileExtensions": [
+      "js",
       "ts",
-      "tsx",
-      "js"
+      "tsx"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "tsconfig.json"
+        "tsConfig": "tsconfig.json"
       }
     },
     "testMatch": [
       "**/__tests__/*.+(ts|tsx|js)"
-    ]
+    ],
+    "preset": "ts-jest"
   },
   "devDependencies": {
+    "@types/expect": "^1.20.3",
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.11",
     "expect": "^23.6.0",

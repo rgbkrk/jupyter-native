@@ -1,6 +1,5 @@
-import { EventEmitter } from "events";
-
 import {} from "child_process";
+import { EventEmitter } from "events";
 
 export type KernelOpts = {};
 

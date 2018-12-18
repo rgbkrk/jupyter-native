@@ -1,3 +1,3 @@
 // import { EventEmitter } from "events";
 
-export { runtimeDir, configDirs, dataDirs } from "./jupyter-paths";
+export {configDirs, dataDirs, runtimeDir} from './jupyter-paths';
